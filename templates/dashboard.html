@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Panel{% endblock %}
+{% block content %}
+<h2 class="mb-4">Bienvenida, {{ current_user.usuario }} 👋</h2>
+<div class="row g-4">
+  <div class="col-md-3">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Productos</h5>
+        <p class="display-6">{{ total_productos }}</p>
+        <a href="{{ url_for('productos') }}" class="btn btn-sm btn-outline-primary">Ver</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Clientes</h5>
+        <p class="display-6">{{ total_clientes }}</p>
+        <a href="{{ url_for('clientes') }}" class="btn btn-sm btn-outline-primary">Ver</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Proveedores</h5>
+        <p class="display-6">{{ total_proveedores }}</p>
+        <a href="{{ url_for('proveedores') }}" class="btn btn-sm btn-outline-primary">Ver</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Facturas</h5>
+        <p class="display-6">{{ total_facturas }}</p>
+        <a href="{{ url_for('facturacion') }}" class="btn btn-sm btn-outline-primary">Ver</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

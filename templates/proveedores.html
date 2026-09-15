@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Proveedores{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Proveedores</h2>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevoProveedor">+ Nuevo proveedor</button>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr><th>ID</th><th>Nombre</th><th>Teléfono</th><th>Email</th><th>Dirección</th><th>Acciones</th></tr>
+    </thead>
+    <tbody>
+      {% for p in proveedores %}
+      <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.nombre }}</td>
+        <td>{{ p.telefono }}</td>
+        <td>{{ p.email }}</td>
+        <td>{{ p.direccion }}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalEditarProveedor{{ p.id }}">Editar</button>
+          <form action="{{ url_for('eliminar_proveedor', id=p.id) }}" method="POST" class="d-inline"
+                onsubmit="return confirm('¿Eliminar este proveedor?');">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+
+      <div class="modal fade" id="modalEditarProveedor{{ p.id }}" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form action="{{ url_for('editar_proveedor', id=p.id) }}" method="POST">
+              {{ form.hidden_tag() }}
+              <div class="modal-header">
+                <h5 class="modal-title">Editar proveedor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-2"><label class="form-label">Nombre</label>
+                  <input type="text" name="nombre" class="form-control" value="{{ p.nombre }}" required></div>
+                <div class="mb-2"><label class="form-label">Teléfono</label>
+                  <input type="text" name="telefono" class="form-control" value="{{ p.telefono or '' }}"></div>
+                <div class="mb-2"><label class="form-label">Email</label>
+                  <input type="email" name="email" class="form-control" value="{{ p.email or '' }}"></div>
+                <div class="mb-2"><label class="form-label">Dirección</label>
+                  <input type="text" name="direccion" class="form-control" value="{{ p.direccion or '' }}"></div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <tr><td colspan="6" class="text-center">No hay proveedores registrados.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="modal fade" id="modalNuevoProveedor" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{{ url_for('nuevo_proveedor') }}" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="modal-header">
+          <h5 class="modal-title">Nuevo proveedor</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">{{ form.nombre.label(class="form-label") }}{{ form.nombre(class="form-control") }}</div>
+          <div class="mb-2">{{ form.telefono.label(class="form-label") }}{{ form.telefono(class="form-control") }}</div>
+          <div class="mb-2">{{ form.email.label(class="form-label") }}{{ form.email(class="form-control") }}</div>
+          <div class="mb-2">{{ form.direccion.label(class="form-label") }}{{ form.direccion(class="form-control") }}</div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

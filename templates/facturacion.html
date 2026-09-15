@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Facturación{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Facturación</h2>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaFactura">+ Nueva factura</button>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr><th>ID</th><th>Cliente</th><th>Producto</th><th>Cantidad</th><th>Total</th><th>Fecha</th><th>Acciones</th></tr>
+    </thead>
+    <tbody>
+      {% for f in facturas %}
+      <tr>
+        <td>{{ f.id }}</td>
+        <td>{{ f.cliente_nombre }}</td>
+        <td>{{ f.producto_nombre }}</td>
+        <td>{{ f.cantidad }}</td>
+        <td>${{ "%.2f"|format(f.total) }}</td>
+        <td>{{ f.fecha }}</td>
+        <td>
+          <form action="{{ url_for('eliminar_factura', id=f.id) }}" method="POST" class="d-inline"
+                onsubmit="return confirm('¿Eliminar esta factura?');">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="text-center">No hay facturas registradas.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="modal fade" id="modalNuevaFactura" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{{ url_for('nueva_factura') }}" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="modal-header">
+          <h5 class="modal-title">Nueva factura</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">{{ form.cliente_id.label(class="form-label") }}{{ form.cliente_id(class="form-select") }}</div>
+          <div class="mb-2">{{ form.producto_id.label(class="form-label") }}{{ form.producto_id(class="form-select") }}</div>
+          <div class="mb-2">{{ form.cantidad.label(class="form-label") }}{{ form.cantidad(class="form-control") }}</div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

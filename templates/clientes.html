@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Clientes{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Clientes</h2>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevoCliente">+ Nuevo cliente</button>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr><th>ID</th><th>Nombre</th><th>Cédula</th><th>Teléfono</th><th>Email</th><th>Dirección</th><th>Acciones</th></tr>
+    </thead>
+    <tbody>
+      {% for c in clientes %}
+      <tr>
+        <td>{{ c.id }}</td>
+        <td>{{ c.nombre }}</td>
+        <td>{{ c.cedula }}</td>
+        <td>{{ c.telefono }}</td>
+        <td>{{ c.email }}</td>
+        <td>{{ c.direccion }}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalEditarCliente{{ c.id }}">Editar</button>
+          <form action="{{ url_for('eliminar_cliente', id=c.id) }}" method="POST" class="d-inline"
+                onsubmit="return confirm('¿Eliminar este cliente?');">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+
+      <!-- Modal editar -->
+      <div class="modal fade" id="modalEditarCliente{{ c.id }}" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form action="{{ url_for('editar_cliente', id=c.id) }}" method="POST">
+              {{ form.hidden_tag() }}
+              <div class="modal-header">
+                <h5 class="modal-title">Editar cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-2"><label class="form-label">Nombre</label>
+                  <input type="text" name="nombre" class="form-control" value="{{ c.nombre }}" required></div>
+                <div class="mb-2"><label class="form-label">Cédula</label>
+                  <input type="text" name="cedula" class="form-control" value="{{ c.cedula }}" required></div>
+                <div class="mb-2"><label class="form-label">Teléfono</label>
+                  <input type="text" name="telefono" class="form-control" value="{{ c.telefono or '' }}"></div>
+                <div class="mb-2"><label class="form-label">Email</label>
+                  <input type="email" name="email" class="form-control" value="{{ c.email or '' }}"></div>
+                <div class="mb-2"><label class="form-label">Dirección</label>
+                  <input type="text" name="direccion" class="form-control" value="{{ c.direccion or '' }}"></div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <tr><td colspan="7" class="text-center">No hay clientes registrados.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal nuevo cliente -->
+<div class="modal fade" id="modalNuevoCliente" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{{ url_for('nuevo_cliente') }}" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="modal-header">
+          <h5 class="modal-title">Nuevo cliente</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">{{ form.nombre.label(class="form-label") }}{{ form.nombre(class="form-control") }}</div>
+          <div class="mb-2">{{ form.cedula.label(class="form-label") }}{{ form.cedula(class="form-control") }}</div>
+          <div class="mb-2">{{ form.telefono.label(class="form-label") }}{{ form.telefono(class="form-control") }}</div>
+          <div class="mb-2">{{ form.email.label(class="form-label") }}{{ form.email(class="form-control") }}</div>
+          <div class="mb-2">{{ form.direccion.label(class="form-label") }}{{ form.direccion(class="form-control") }}</div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
