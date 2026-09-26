@@ -1,3 +1,4 @@
+from psycopg2.extras import RealDictCursor
 from flask_login import UserMixin
 from conexion.conexion import obtener_conexion
 
@@ -16,7 +17,7 @@ def obtener_usuario_por_id(user_id):
     conexion = obtener_conexion()
     if not conexion:
         return None
-    cursor = conexion.cursor(dictionary=True)
+    cursor = conexion.cursor(cursor_factory=RealDictCursor)
     cursor.execute("SELECT * FROM usuarios WHERE id = %s", (user_id,))
     fila = cursor.fetchone()
     cursor.close()
@@ -30,7 +31,7 @@ def obtener_usuario_por_nombre(usuario):
     conexion = obtener_conexion()
     if not conexion:
         return None
-    cursor = conexion.cursor(dictionary=True)
+    cursor = conexion.cursor(cursor_factory=RealDictCursor)
     cursor.execute("SELECT * FROM usuarios WHERE usuario = %s", (usuario,))
     fila = cursor.fetchone()
     cursor.close()
@@ -60,7 +61,7 @@ def crear_usuario(usuario, password_hash):
 # ------------------------------------------------------------------
 def listar_proveedores():
     conexion = obtener_conexion()
-    cursor = conexion.cursor(dictionary=True)
+    cursor = conexion.cursor(cursor_factory=RealDictCursor)
     cursor.execute("SELECT * FROM proveedores ORDER BY id DESC")
     datos = cursor.fetchall()
     cursor.close()
@@ -70,7 +71,7 @@ def listar_proveedores():
 
 def obtener_proveedor(id):
     conexion = obtener_conexion()
-    cursor = conexion.cursor(dictionary=True)
+    cursor = conexion.cursor(cursor_factory=RealDictCursor)
     cursor.execute("SELECT * FROM proveedores WHERE id = %s", (id,))
     dato = cursor.fetchone()
     cursor.close()
@@ -116,7 +117,7 @@ def eliminar_proveedor(id):
 # ------------------------------------------------------------------
 def listar_productos():
     conexion = obtener_conexion()
-    cursor = conexion.cursor(dictionary=True)
+    cursor = conexion.cursor(cursor_factory=RealDictCursor)
     cursor.execute(
         """SELECT p.*, pr.nombre AS proveedor_nombre
            FROM productos p
@@ -131,7 +132,7 @@ def listar_productos():
 
 def obtener_producto(id):
     conexion = obtener_conexion()
-    cursor = conexion.cursor(dictionary=True)
+    cursor = conexion.cursor(cursor_factory=RealDictCursor)
     cursor.execute("SELECT * FROM productos WHERE id = %s", (id,))
     dato = cursor.fetchone()
     cursor.close()
@@ -179,7 +180,7 @@ def eliminar_producto(id):
 # ------------------------------------------------------------------
 def listar_clientes():
     conexion = obtener_conexion()
-    cursor = conexion.cursor(dictionary=True)
+    cursor = conexion.cursor(cursor_factory=RealDictCursor)
     cursor.execute("SELECT * FROM clientes ORDER BY id DESC")
     datos = cursor.fetchall()
     cursor.close()
@@ -189,7 +190,7 @@ def listar_clientes():
 
 def obtener_cliente(id):
     conexion = obtener_conexion()
-    cursor = conexion.cursor(dictionary=True)
+    cursor = conexion.cursor(cursor_factory=RealDictCursor)
     cursor.execute("SELECT * FROM clientes WHERE id = %s", (id,))
     dato = cursor.fetchone()
     cursor.close()
@@ -237,7 +238,7 @@ def eliminar_cliente(id):
 # ------------------------------------------------------------------
 def listar_facturas():
     conexion = obtener_conexion()
-    cursor = conexion.cursor(dictionary=True)
+    cursor = conexion.cursor(cursor_factory=RealDictCursor)
     cursor.execute(
         """SELECT f.*, c.nombre AS cliente_nombre, p.nombre AS producto_nombre
            FROM facturacion f
